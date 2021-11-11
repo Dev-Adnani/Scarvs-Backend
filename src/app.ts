@@ -27,7 +27,7 @@ createConnection(connectionOptions)
 
     app.get("/", (req, res) => {
       res.send({
-        data: "Scarvs API",
+        data: "Scarvs Ecommerce API",
         working: true,
       });
     });
