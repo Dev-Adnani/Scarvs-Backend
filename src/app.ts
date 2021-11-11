@@ -28,7 +28,7 @@ createConnection(connectionOptions)
     app.get("/", (req, res) => {
       res.send({
         data: "Scarvs API",
-        woriking: true,
+        working: true,
       });
     });
 
