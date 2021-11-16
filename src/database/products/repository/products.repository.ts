@@ -139,10 +139,10 @@ export class ProductsRepository extends Repository<ProductsEntity> {
         .where("product_name like :productName", { productName:`%${productName}%` })
         .getMany();
 
-      console.log(productDetail);
+      // console.log(productDetail);
+      // console.log(productDetail.length);
       
-
-      if (productDetail !== undefined) {
+      if (productDetail !== undefined && productDetail.length != 0) {
         return res.send({
           available: true,
           received: true,
