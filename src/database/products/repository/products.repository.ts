@@ -6,7 +6,6 @@ import { ProductsEntity } from "../entity/products.entity";
 dotenv.config();
 @EntityRepository(ProductsEntity)
 export class ProductsRepository extends Repository<ProductsEntity> {
-
   // ? Add Products
   async addProducts(req: Request, res: Response) {
     let {
@@ -77,9 +76,9 @@ export class ProductsRepository extends Repository<ProductsEntity> {
 
     try {
       let productDetail = await this.createQueryBuilder()
-      .select()
-      .where("product_id = :productId",{productId:productId})
-      .getOne()
+        .select()
+        .where("product_id = :productId", { productId: productId })
+        .getOne();
 
       if (productDetail !== undefined) {
         return res.send({
@@ -90,15 +89,15 @@ export class ProductsRepository extends Repository<ProductsEntity> {
       } else {
         return res.send({
           received: true,
-          available : false,
-          data: "There Is No Product In System With This ID",
+          available: false,
+          data: null,
         });
       }
     } catch (error) {
-        return res.send({
-          received: false,
-          data: error,
-        });
+      return res.send({
+        received: false,
+        data: error,
+      });
     }
   }
 
@@ -108,9 +107,9 @@ export class ProductsRepository extends Repository<ProductsEntity> {
     let adminSecret = req.headers.authorization as string;
 
     if (adminSecret === "ScarvsAdminObv") {
-        await this.createQueryBuilder()
+      await this.createQueryBuilder()
         .delete()
-        .where("product_id = :productId",{productId:productId})
+        .where("product_id = :productId", { productId: productId })
         .execute()
         .then((data: any) => {
           return res.send({
@@ -128,6 +127,38 @@ export class ProductsRepository extends Repository<ProductsEntity> {
       return res.send({
         deleted: false,
         data: "Wrong Auth Token",
+      });
+    }
+  }
+
+  async searchProduct(req: Request, res: Response) {
+    let { productName } = req.params;
+    try {
+      let productDetail = await this.createQueryBuilder()
+        .select()
+        .where("product_name like :productName", { productName:`%${productName}%` })
+        .getMany();
+
+      console.log(productDetail);
+      
+
+      if (productDetail !== undefined) {
+        return res.send({
+          available: true,
+          received: true,
+          data: productDetail,
+        });
+      } else {
+        return res.send({
+          received: true,
+          available: false,
+          data: null,
+        });
+      }
+    } catch (error) {
+      return res.send({
+        received: false,
+        data: error,
       });
     }
   }

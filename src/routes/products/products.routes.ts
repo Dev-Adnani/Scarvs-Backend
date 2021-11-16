@@ -12,6 +12,8 @@ productRouter.delete("/delete/:productId", ProductsController.deleteProduct);
 //? @Get
 productRouter.get("/", ProductsController.showProducts);
 productRouter.get("/details/:productId", ProductsController.loadProductDetails);
+productRouter.get("/search/:productName", ProductsController.searchProduct);
+
 
 
 export { productRouter };

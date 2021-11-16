@@ -22,4 +22,9 @@ export class ProductsController {
     let connectionManager = getManager().getCustomRepository(ProductsRepository);
     await connectionManager.deleteProduct(req, res);
   }
+
+  static async searchProduct(req: Request, res: Response) {
+    let connectionManager = getManager().getCustomRepository(ProductsRepository);
+    await connectionManager.searchProduct(req, res);
+  }
 }
