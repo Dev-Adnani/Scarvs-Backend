@@ -53,7 +53,7 @@ export class ProductsRepository extends Repository<ProductsEntity> {
         return res.send({
           filled: false,
           received: true,
-          data: "There Are No Products In System",
+          data: null,
         });
       } else {
         return res.send({
@@ -66,7 +66,7 @@ export class ProductsRepository extends Repository<ProductsEntity> {
       return res.send({
         filled: false,
         received: false,
-        data: "There Are No Products In System",
+        data: null,
       });
     }
   }

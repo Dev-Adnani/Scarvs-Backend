@@ -199,7 +199,7 @@ export class UserRepository extends Repository<UserEntity> {
   }
 
   // ? Decoding JWT 👍
-  async   decodeUseData(req:Request,res:Response)
+  async  decodeUseData(req:Request,res:Response)
   {
     let tokenData = req.headers.authorization as string;
     let jwt_secret = process.env.JWT_SECRET as string;

@@ -61,7 +61,7 @@ export class CartRepository extends Repository<CartEntity> {
             return res.send({
               filled: false,
               received: true,
-              data: "The Cart Is Empty",
+              data: null,
             });
           } else {
             return res.send({
@@ -74,7 +74,7 @@ export class CartRepository extends Repository<CartEntity> {
           return res.send({
             filled: false,
             received: false,
-            data: "The Cart Is Empty",
+            data: null,
           });
         }
       } else {
