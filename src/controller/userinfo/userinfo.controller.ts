@@ -7,6 +7,7 @@ export class UserInfoController {
     let connectionManager = getManager().getCustomRepository(UserInfoRepository);
     await connectionManager.addUserInfo(req, res);
   }
+  
 
   static async showUserInfo(req: Request, res: Response) {
     let connectionManager = getManager().getCustomRepository(UserInfoRepository);
