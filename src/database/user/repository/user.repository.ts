@@ -68,10 +68,11 @@ export class UserRepository extends Repository<UserEntity> {
           .where("users.useremail = :input", { input: useremail })
           .getOne();
 
-        let userId = await this.createQueryBuilder("users")
-          .select("users.id")
+        let username = await this.createQueryBuilder("users")
+          .select("users.username")
           .where("users.useremail = :input", { input: useremail })
-          .getOne();
+          .getOne()          
+
 
         bcrypt.compare(
           userpassword,
@@ -94,6 +95,7 @@ export class UserRepository extends Repository<UserEntity> {
               jwt.sign(
                 {
                   email: useremail,
+                  username: username?.username,
                 },
                 jwt_secret,
                 {
@@ -164,15 +166,10 @@ export class UserRepository extends Repository<UserEntity> {
 
             await this.save(user); //? Adding User To DB with Hashed Pass
 
-            //? Creating JWT :)
-            let userid = this.createQueryBuilder("users")
-              .select("users.id")
-              .where("users.useremail = :query", { query: useremail })
-              .getOne();
-
             jwt.sign(
               {
                 email: useremail,
+                username : username
               },
               jwt_secret,
               {
