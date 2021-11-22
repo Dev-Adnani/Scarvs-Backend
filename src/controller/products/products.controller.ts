@@ -27,4 +27,9 @@ export class ProductsController {
     let connectionManager = getManager().getCustomRepository(ProductsRepository);
     await connectionManager.searchProduct(req, res);
   }
+
+  static async getProductByCategory(req: Request, res: Response) {
+    let connectionManager = getManager().getCustomRepository(ProductsRepository);
+    await connectionManager.getProductByCategory(req, res);
+  }
 }

@@ -131,12 +131,47 @@ export class ProductsRepository extends Repository<ProductsEntity> {
     }
   }
 
+  //Search Product
   async searchProduct(req: Request, res: Response) {
     let { productName } = req.params;
     try {
       let productDetail = await this.createQueryBuilder()
         .select()
         .where("product_name like :productName", { productName:`%${productName}%` })
+        .getMany();
+
+      // console.log(productDetail);
+      // console.log(productDetail.length);
+      
+      if (productDetail !== undefined && productDetail.length != 0) {
+        return res.send({
+          available: true,
+          received: true,
+          data: productDetail,
+        });
+      } else {
+        return res.send({
+          received: true,
+          available: false,
+          data: null,
+        });
+      }
+    } catch (error) {
+      return res.send({
+        received: false,
+        data: error,
+      });
+    }
+  }
+
+
+  //Search Product
+  async getProductByCategory(req: Request, res: Response) {
+    let { productCategory } = req.params;
+    try {
+      let productDetail = await this.createQueryBuilder()
+        .select()
+        .where("product_category = :productCategory", { productCategory: productCategory })
         .getMany();
 
       // console.log(productDetail);

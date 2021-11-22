@@ -13,6 +13,7 @@ productRouter.delete("/delete/:productId", ProductsController.deleteProduct);
 productRouter.get("/", ProductsController.showProducts);
 productRouter.get("/details/:productId", ProductsController.loadProductDetails);
 productRouter.get("/search/:productName", ProductsController.searchProduct);
+productRouter.get("/category/:productCategory", ProductsController.getProductByCategory);
 
 
 
