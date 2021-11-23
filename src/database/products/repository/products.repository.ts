@@ -82,14 +82,14 @@ export class ProductsRepository extends Repository<ProductsEntity> {
 
       if (productDetail !== undefined) {
         return res.send({
-          available: true,
+          filled: true,
           received: true,
           data: productDetail,
         });
       } else {
         return res.send({
           received: true,
-          available: false,
+          filled: false,
           data: null,
         });
       }
@@ -145,14 +145,14 @@ export class ProductsRepository extends Repository<ProductsEntity> {
       
       if (productDetail !== undefined && productDetail.length != 0) {
         return res.send({
-          available: true,
+          filled: true,
           received: true,
           data: productDetail,
         });
       } else {
         return res.send({
           received: true,
-          available: false,
+          filled: false,
           data: null,
         });
       }
@@ -179,14 +179,14 @@ export class ProductsRepository extends Repository<ProductsEntity> {
       
       if (productDetail !== undefined && productDetail.length != 0) {
         return res.send({
-          available: true,
+          filled: true,
           received: true,
           data: productDetail,
         });
       } else {
         return res.send({
           received: true,
-          available: false,
+          filled: false,
           data: null,
         });
       }
