@@ -3,7 +3,6 @@ import { Request, Response } from "express";
 import dotenv from "dotenv";
 import { UserInfoEntity } from "../entity/userinfo.entity";
 import { UserRepository } from "../../user/repository/user.repository";
-import { info } from "console";
 
 dotenv.config();
 @EntityRepository(UserInfoEntity)
@@ -56,21 +55,28 @@ export class UserInfoRepository extends Repository<UserInfoEntity> {
           .where("info.id = :id", { id: user.id })
           .getOne();
 
+        if (userInfoData === null || userInfoData === undefined) {
+          return res.send({
+            received: true,
+            filled: false,
+          });
+        } else {
+          return res.send({
+            received: true,
+            filled: true,
+            data: userInfoData,
+          });
+        }
+      } else {
         return res.send({
-          received: true,
-          data: userInfoData,
-        });
-      }
-      else
-      {
-        return res.send({
-          added: false,
-          data: "There Is No User Corresponding To This Email",
+          received: false,
+          filled: false,
         });
       }
     } catch (error) {
       return res.send({
         received: false,
+        filled: false,
         data: error,
       });
     }

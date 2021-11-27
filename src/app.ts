@@ -25,11 +25,8 @@ createConnection(connectionOptions)
 
     app.set("port", port);
 
-    app.get("/", (req, res) => {
-      res.send({
-        data: "Scarvs Ecommerce API",
-        working: true,
-      });
+    app.get('/', (req, res) => {
+      res.sendFile('index.html', { root: '.' })
     });
 
     //? Auth
