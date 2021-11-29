@@ -2,6 +2,7 @@ import { BaseEntity, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColum
 import { UserEntity } from "../../user/entity/user.entity";
 
 @Entity("userinfo")
+
 export class UserInfoEntity extends BaseEntity {
   @PrimaryGeneratedColumn("increment")
   id!: number;
@@ -20,8 +21,8 @@ export class UserInfoEntity extends BaseEntity {
 
   @OneToOne(() => UserEntity , (user) => user.info , {
     cascade:["update"],
-    createForeignKeyConstraints : false
-  })
+    createForeignKeyConstraints : false,
+    })
   @JoinColumn()
   user! : UserEntity
 
