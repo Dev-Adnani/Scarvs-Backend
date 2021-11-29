@@ -7,35 +7,78 @@ import { UserRepository } from "../../user/repository/user.repository";
 dotenv.config();
 @EntityRepository(UserInfoEntity)
 export class UserInfoRepository extends Repository<UserInfoEntity> {
-  // ? Add User Info
+  
+  // ? Add User Info OR IF Exits Update Data
   async addUserInfo(req: Request, res: Response) {
+
     try {
+
       let { useremail, user_address, user_phone_no } = req.body;
 
       let userRepo = getCustomRepository(UserRepository);
       let user = await userRepo.findOne({ useremail: useremail });
 
       if (user) {
-        let userInfo = new UserInfoEntity();
-        userInfo.user_address = user_address;
-        userInfo.user_phone_no = user_phone_no;
-        userInfo.user = user!;
 
-        await userInfo.save();
+        let userInfoData = await this.createQueryBuilder("info")
+        .where("info.userId = :id", { id: user!.id })
+        .getOne();
 
-        return res.send({
-          added: true,
-          data: "User Info Added",
-        });
-      } else {
+        if (userInfoData === undefined) { 
+
+          let userInfo = new UserInfoEntity();
+          userInfo.user_address = user_address;
+          userInfo.user_phone_no = user_phone_no;
+          userInfo.user = user!;
+  
+          await userInfo.save();
+  
+          return res.send({
+            added: true,
+            updated: true,
+            data: "User Info Added",
+          });
+
+        }
+        else if(userInfoData !== undefined)
+        {
+          await this.createQueryBuilder()
+          .update(UserInfoEntity)
+          .set({
+            user_address: user_address,
+            user_phone_no: user_phone_no,
+          })
+          .where("userId = :id", { id: user!.id })
+          .execute()
+          .then((updatedData: any) => {
+            return res.send({
+              added: true,
+              updated: true,
+              data: updatedData,
+            });
+          })
+          .catch((error: any) => {
+            return res.send({
+              added: false,
+              updated: false,
+              data: error,
+            });
+          });
+        }
+
+      } 
+      else {
         return res.send({
           added: false,
+          updated: false,
           data: "There Is No User Corresponding To This Email",
         });
       }
+
     } catch (error) {
       return res.send({
         added: false,
+        updated: false,
         data: error,
       });
     }
@@ -82,38 +125,4 @@ export class UserInfoRepository extends Repository<UserInfoEntity> {
     }
   }
 
-  //? Update User Info
-  async updateUserInfo(req: Request, res: Response) {
-    let { infoId } = req.params;
-    let { user_address, user_phone_no } = req.body;
-
-    try {
-      await this.createQueryBuilder("userinfo")
-        .leftJoinAndSelect("userinfo.user", "user")
-        .update(UserInfoEntity)
-        .set({
-          user_address: user_address,
-          user_phone_no: user_phone_no,
-        })
-        .where("userinfo.id = :infoId", { infoId: infoId })
-        .execute()
-        .then((updatedData: any) => {
-          return res.send({
-            updated: true,
-            data: updatedData,
-          });
-        })
-        .catch((error: any) => {
-          return res.send({
-            updated: false,
-            data: error,
-          });
-        });
-    } catch (error) {
-      return res.send({
-        updated: false,
-        data: error,
-      });
-    }
-  }
 }

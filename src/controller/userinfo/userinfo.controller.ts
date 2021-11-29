@@ -13,10 +13,5 @@ export class UserInfoController {
     let connectionManager = getManager().getCustomRepository(UserInfoRepository);
     await connectionManager.showUserInfo(req, res);
   }
-
-  static async updateUserInfo(req: Request, res: Response) {
-    let connectionManager = getManager().getCustomRepository(UserInfoRepository);
-    await connectionManager.updateUserInfo(req, res);
-  }
  
 }
