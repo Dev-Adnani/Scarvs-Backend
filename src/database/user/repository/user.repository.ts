@@ -1,4 +1,4 @@
-import { EntityRepository, Repository } from "typeorm";
+import { EntityRepository, getCustomRepository, Repository } from "typeorm";
 import { Request, Response } from "express";
 import * as EmailValidator from "email-validator";
 import dotenv from "dotenv";
@@ -9,7 +9,6 @@ import { UserEntity } from "../entity/user.entity";
 dotenv.config();
 @EntityRepository(UserEntity)
 export class UserRepository extends Repository<UserEntity> {
-
   // ? Fetch All Users
   async getUsers(req: Request, res: Response) {
     let token = req.headers.authorization as string;
@@ -37,6 +36,78 @@ export class UserRepository extends Repository<UserEntity> {
         }
       }
     });
+  }
+
+  async changePassword(req: Request, res: Response) {
+    let { oluserpassword, useremail, newuserpassword } = req.body;
+
+    let userRepo = getCustomRepository(UserRepository);
+    let user = await userRepo.findOne({ useremail: useremail });
+
+    if (!user) {
+      return res.send({
+        authentication: false,
+        data: "There Is No User Corresponding To This Email",
+      });
+    } else {
+      bcrypt.compare(
+        oluserpassword,
+        user.userpassword as string,
+        async (error: any, isPasswordMatched: any) => {
+          if (error) {
+            return res.send({
+              changed: false,
+              data: error,
+            });
+          }
+          if (!isPasswordMatched) {
+            return res.send({
+              changed: false,
+              data: "Incorrect Old Password",
+            });
+          }
+          if (isPasswordMatched) {
+            const salt = await bcrypt.genSalt(10);
+
+            await bcrypt.hash(
+              newuserpassword,
+              salt,
+              async (error: any, hashedPassword: any) => {
+                if (error) {
+                  return res.send({
+                    changed: false,
+                    updated: false,
+                    data: error,
+                  });
+                } else {
+                  this.createQueryBuilder()
+                    .update(UserEntity)
+                    .set({
+                      userpassword: hashedPassword,
+                    })
+                    .where("id = :id", { id: user?.id })
+                    .execute()
+                    .then((updatedData: any) => {
+                      return res.send({
+                        changed: true,
+                        updated: true,
+                        data: updatedData,
+                      });
+                    })
+                    .catch((error: any) => {
+                      return res.send({
+                        changed: false,
+                        updated: false,
+                        data: error,
+                      });
+                    });
+                }
+              }
+            );
+          }
+        }
+      );
+    }
   }
 
   //? Login
@@ -71,14 +142,12 @@ export class UserRepository extends Repository<UserEntity> {
         let username = await this.createQueryBuilder("users")
           .select("users.username")
           .where("users.useremail = :input", { input: useremail })
-          .getOne()          
-
+          .getOne();
 
         bcrypt.compare(
           userpassword,
           findUserPasswordFromDB?.userpassword as string,
           (error: any, isPasswordMatched: any) => {
-
             if (error) {
               return res.send({
                 authentication: false,
@@ -169,7 +238,7 @@ export class UserRepository extends Repository<UserEntity> {
             jwt.sign(
               {
                 email: useremail,
-                username : username
+                username: username,
               },
               jwt_secret,
               {
@@ -196,13 +265,11 @@ export class UserRepository extends Repository<UserEntity> {
   }
 
   // ? Decoding JWT 👍
-  async  decodeUseData(req:Request,res:Response)
-  {
+  async decodeUseData(req: Request, res: Response) {
     let tokenData = req.headers.authorization as string;
     let jwt_secret = process.env.JWT_SECRET as string;
 
-    jwt.verify(tokenData,jwt_secret, async (error:any,userData:any) =>
-    {
+    jwt.verify(tokenData, jwt_secret, async (error: any, userData: any) => {
       if (error) {
         return res.send({
           received: false,
@@ -214,11 +281,9 @@ export class UserRepository extends Repository<UserEntity> {
           data: userData,
         });
       }
-    })
-
+    });
   }
 }
-
 
 //One To One  -> User | UserInfo => address + dob etc
 //One To Many -> User | Cart => items({itemname,itmeprice})

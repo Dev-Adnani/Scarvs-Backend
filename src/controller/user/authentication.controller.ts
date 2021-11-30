@@ -22,4 +22,9 @@ export class AuthenticationController {
     let connectionManager = getManager().getCustomRepository(UserRepository);
     await connectionManager.decodeUseData(req, res);
   }
+
+  static async changePassword(req: Request, res: Response) {
+    let connectionManager = getManager().getCustomRepository(UserRepository);
+    await connectionManager.changePassword(req, res);
+  }
 }
