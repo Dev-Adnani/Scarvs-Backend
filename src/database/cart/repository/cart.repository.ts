@@ -104,13 +104,13 @@ export class CartRepository extends Repository<CartEntity> {
       .then((data: any) => {
         return res.send({
           deleted: true,
-          data: data,
+          data: 'Done',
         });
       })
       .catch((error: any) => {
         return res.send({
           deleted: false,
-          data: error,
+          data: 'ERROR',
         });
       });
   }
