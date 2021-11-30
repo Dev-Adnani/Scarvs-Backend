@@ -27,6 +27,18 @@ export class CartEntity extends BaseEntity {
   })
   product_category!: string;
 
+  @Column({
+    nullable: true,
+    unique: false,
+  })
+  product_image!: string;
+
+  @Column({
+    nullable: true,
+    unique: false,
+  })
+  product_size!: string;
+
   @ManyToOne(() => UserEntity, (user) => user.item)
   user!: UserEntity;
 }

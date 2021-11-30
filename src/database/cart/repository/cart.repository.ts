@@ -9,7 +9,7 @@ dotenv.config();
 export class CartRepository extends Repository<CartEntity> {
   //? Add To Cart :)
   async addToCart(req: Request, res: Response) {
-    let { useremail, product_price, product_name, product_category } = req.body;
+    let { useremail, product_price, product_name, product_category ,product_image , product_size } = req.body;
 
     try {
       let userRepo = getCustomRepository(UserRepository);
@@ -21,6 +21,8 @@ export class CartRepository extends Repository<CartEntity> {
         cartItem.product_name = product_name;
         cartItem.product_category = product_category;
         cartItem.product_price = product_price;
+        cartItem.product_image = product_image;
+        cartItem.product_size = product_size;
 
         await cartItem.save();
 
@@ -31,13 +33,13 @@ export class CartRepository extends Repository<CartEntity> {
       } else {
         return res.send({
           added: false,
-          data: "There Is No User Corresponding To This Email",
+          data: null,
         });
       }
     } catch (error) {
       return res.send({
         added: false,
-        data: "Something Went Wrong",
+        data: error,
       });
     }
   }
@@ -80,7 +82,7 @@ export class CartRepository extends Repository<CartEntity> {
       } else {
         return res.send({
           added: false,
-          data: "There Is No User Corresponding To This Email",
+          data: null,
         });
       }
     } catch (error) {
