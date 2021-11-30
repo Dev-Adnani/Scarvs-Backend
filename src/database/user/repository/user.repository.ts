@@ -56,13 +56,15 @@ export class UserRepository extends Repository<UserEntity> {
         async (error: any, isPasswordMatched: any) => {
           if (error) {
             return res.send({
+              updated: false,
               changed: false,
-              data: error,
+              data: 'Some Error Occurred',
             });
           }
           if (!isPasswordMatched) {
             return res.send({
               changed: false,
+              updated: false,
               data: "Incorrect Old Password",
             });
           }
@@ -77,7 +79,7 @@ export class UserRepository extends Repository<UserEntity> {
                   return res.send({
                     changed: false,
                     updated: false,
-                    data: error,
+                    data: 'Some Error Occurred',
                   });
                 } else {
                   this.createQueryBuilder()
@@ -91,14 +93,14 @@ export class UserRepository extends Repository<UserEntity> {
                       return res.send({
                         changed: true,
                         updated: true,
-                        data: updatedData,
+                        data: 'Password Changed',
                       });
                     })
                     .catch((error: any) => {
                       return res.send({
                         changed: false,
                         updated: false,
-                        data: error,
+                        data: 'Some Error Occurred',
                       });
                     });
                 }
