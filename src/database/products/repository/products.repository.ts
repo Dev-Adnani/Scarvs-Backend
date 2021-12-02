@@ -137,12 +137,9 @@ export class ProductsRepository extends Repository<ProductsEntity> {
     try {
       let productDetail = await this.createQueryBuilder()
         .select()
-        .where("product_name like :productName", { productName:`%${productName}%` })
+        .where("product_name ILike :productName", { productName:`%${productName}%` })
         .getMany();
 
-      // console.log(productDetail);
-      // console.log(productDetail.length);
-      
       if (productDetail !== undefined && productDetail.length != 0) {
         return res.send({
           filled: true,
@@ -173,9 +170,6 @@ export class ProductsRepository extends Repository<ProductsEntity> {
         .select()
         .where("product_category = :productCategory", { productCategory: productCategory })
         .getMany();
-
-      // console.log(productDetail);
-      // console.log(productDetail.length);
       
       if (productDetail !== undefined && productDetail.length != 0) {
         return res.send({
