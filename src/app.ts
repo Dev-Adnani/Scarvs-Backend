@@ -26,7 +26,7 @@ createConnection(connectionOptions)
     app.set("port", port);
 
     app.get('/', (req, res) => {
-      res.sendFile('README.md', { root: '.' })
+      res.sendFile('index.html', { root: '.' })
     });
 
     //? Auth
