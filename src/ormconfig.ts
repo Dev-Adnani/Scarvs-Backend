@@ -9,7 +9,8 @@ import { ProductsEntity } from "./database/products/entity/products.entity";
 dotenv.config();
 const connectionOptions: ConnectionOptions = {
   url : process.env.DATABASE_URL,
-  ssl : {rejectUnauthorized:false},
+  // ssl : {rejectUnauthorized:false},
+  ssl:false,
   type: "postgres",
   host: process.env.host || "localhost",
   port: 5432,
